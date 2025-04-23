@@ -1,5 +1,9 @@
 import React from 'react';
-import { activitiesData } from '../data/activitiesData'; // Adjust path
+import { activitiesData } from '../data/activitiesData';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGlobe } from '@fortawesome/free-solid-svg-icons';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
+
 
 function Activities({ onOpenVideoModal }) { // Receive the handler prop
     return (
@@ -13,7 +17,7 @@ function Activities({ onOpenVideoModal }) { // Receive the handler prop
                     {activitiesData.map((activity, index) => (
                         <div className="activity-card" key={index}>
                             <div className="activity-icon">
-                                <i className={activity.iconClass}></i>
+                                <FontAwesomeIcon icon={activity.iconClass} />
                             </div>
                             <div className="activity-content">
                                 <h3>{activity.title}</h3>
@@ -23,8 +27,8 @@ function Activities({ onOpenVideoModal }) { // Receive the handler prop
                                     <div className="activity-links">
                                         {activity.links?.map((link, lIndex) => (
                                             <a href={link.url} target="_blank" rel="noopener noreferrer" key={lIndex} title={link.text}>
-                                                {link.type === 'github' && <i className="fab fa-github"></i>}
-                                                {link.type === 'website' && <i className="fa fa-globe"></i>}
+                                                {link.type === 'github' && <FontAwesomeIcon icon={faGithub} />}
+                                                {link.type === 'website' && <FontAwesomeIcon icon={faGlobe} />}
                                                 {link.type === 'huggingface' && <img style={{ width: '18px', height: '18px', verticalAlign: 'middle' }} src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" alt="Hugging Face" /> }
                                                 {' '}{link.text}
                                             </a>
@@ -32,7 +36,7 @@ function Activities({ onOpenVideoModal }) { // Receive the handler prop
                                          {/* Conditionally render video button */}
                                         {activity.hasVideo && (
                                             <button className="video-btn" onClick={onOpenVideoModal}>
-                                                <i className="fas fa-play-circle"></i> Watch Review
+                                                 Watch Review
                                             </button>
                                         )}
                                     </div>

@@ -1,5 +1,9 @@
 import React from 'react';
-import { projectsData } from '../data/projectsData'; // Adjust path
+import { projectsData } from '../data/projectsData';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGlobe } from '@fortawesome/free-solid-svg-icons';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
+
 
 function Projects() {
     return (
@@ -27,12 +31,12 @@ function Projects() {
                                 <div className="project-links">
                                     {project.links.github && (
                                         <a href={project.links.github} target="_blank" rel="noopener noreferrer" aria-label={`${project.title} GitHub Repository`}>
-                                            <i className="fab fa-github"></i>
+                                            <FontAwesomeIcon icon={faGithub} />
                                         </a>
                                     )}
                                     {project.links.live && (
                                          <a href={project.links.live} target="_blank" rel="noopener noreferrer" aria-label={`${project.title} Live Demo`}>
-                                            <i className="fa fa-globe"></i>
+                                            <FontAwesomeIcon icon={faGlobe} />
                                         </a>
                                     )}
                                     {project.links.huggingface && (

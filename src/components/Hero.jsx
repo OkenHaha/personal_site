@@ -1,4 +1,7 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEnvelope, faChevronDown} from '@fortawesome/free-solid-svg-icons';
+import { faGithub, faLinkedin, faXTwitter} from '@fortawesome/free-brands-svg-icons';
 
 function Hero() {
      // Smooth scroll handler
@@ -39,10 +42,10 @@ function Hero() {
                      {/* Set background image via style prop - ensure path is correct */}
                     <div className="profile-picture" style={{ backgroundImage: `url('/profile.jpg')` }}></div>
                     <div className="social-icons">
-                        <a href="https://github.com/OkenHaha" target="_blank" rel="noopener noreferrer" className="social-icon" aria-label="GitHub Profile"><i className="fab fa-github"></i></a>
-                        <a href="https://www.linkedin.com/in/okenk" target="_blank" rel="noopener noreferrer" className="social-icon" aria-label="LinkedIn Profile"><i className="fab fa-linkedin"></i></a>
-                        <a href="https://www.x.com/okenk19" target="_blank" rel="noopener noreferrer" className="social-icon" aria-label="X Profile"><i className="fab fa-square-x-twitter"></i></a>
-                        <a href="mailto:keithellakpamoken@gmail.com" className="social-icon" aria-label="Email Me"><i className="fas fa-envelope"></i></a>
+                        <a href="https://github.com/OkenHaha" target="_blank" rel="noopener noreferrer" className="social-icon" aria-label="GitHub Profile"><FontAwesomeIcon icon={faGithub} /></a>
+                        <a href="https://www.linkedin.com/in/okenk" target="_blank" rel="noopener noreferrer" className="social-icon" aria-label="LinkedIn Profile"><FontAwesomeIcon icon={faLinkedin} /></a>
+                        <a href="https://www.x.com/okenk19" target="_blank" rel="noopener noreferrer" className="social-icon" aria-label="X Profile"><FontAwesomeIcon icon={faXTwitter} /></a>
+                        <a href="mailto:keithellakpamoken@gmail.com" className="social-icon" aria-label="Email Me"><FontAwesomeIcon icon={faEnvelope} /></a>
                     </div>
                 </div>
             </div>
@@ -52,7 +55,7 @@ function Hero() {
                         <div className="wheel"></div>
                     </div>
                     <div>
-                        <i className="fa-solid fa-chevron-down arrow-down"></i>
+                        <FontAwesomeIcon icon={faChevronDown} className="arrow-down" />
                     </div>
                 </a>
             </div>
