@@ -1,0 +1,59 @@
+/* 404.css */
+
+/* Styles specific to the #not-found-page container */
+#not-found-page {
+    /* Use CSS variables for background and text colors */
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+
+    font-family: sans-serif; /* Use a common, clean sans-serif font */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Full viewport height */
+    margin: 0;
+    text-align: center;
+    /* Ensure this container takes up the full viewport if body styles aren't global */
+    width: 100%;
+    height: 100%;
+    transition: .3s ease-in;
+}
+
+/* Style the inner content container */
+#not-found-page .container {
+    padding: 20px;
+    /* Use CSS variable for the container background */
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 90%;
+}
+
+/* Style the H1 within the not-found-page */
+#not-found-page h1 {
+    font-size: 6em; /* Large size for the 404 number */
+    margin: 0;
+    /* Use CSS variable for the accent color */
+    color: var(--accent-color);
+}
+
+/* Style paragraphs within the not-found-page */
+#not-found-page p {
+    font-size: 1.2em;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+/* Style links within the not-found-page */
+#not-found-page a {
+    /* Use CSS variable for the accent color */
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Style link hover state within the not-found-page */
+#not-found-page a:hover {
+    text-decoration: underline;
+}
