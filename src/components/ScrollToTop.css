@@ -1,0 +1,68 @@
+.scroll-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: #000;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.scroll-to-top svg {
+  color: white;
+  width: 20px;
+  height: 20px;
+}
+
+.scroll-to-top:hover {
+  background-color: #333;
+  transform: translateY(-3px);
+}
+
+/* Dark theme styles */
+[data-theme='dark'] .scroll-to-top {
+  background-color: #fff;
+}
+
+[data-theme='dark'] .scroll-to-top svg {
+  color: #000;
+}
+
+[data-theme='dark'] .scroll-to-top:hover {
+  background-color: #ddd;
+}
+
+/* Animation */
+.scroll-to-top {
+  animation: fadeIn 0.3s;
+  opacity: 0.7;
+}
+
+.scroll-to-top:hover {
+  opacity: 1;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.7;
+  }
+}
+
+/* Media query for mobile devices */
+@media screen and (max-width: 768px) {
+  .scroll-to-top {
+    bottom: 20px;
+    right: 20px;
+    width: 35px;
+    height: 35px;
+  }
+}

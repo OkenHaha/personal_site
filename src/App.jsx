@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import './App.css';
-import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom'; // Import Outlet here if not in Layout file
+import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 
-// Import your components and pages
+
 import Footer from './components/Footer';
 import Header from './components/Header';
 import MobileMenu from './components/MobileMenu';
-import VideoModal from './components/VideoModal'; // Assuming VideoModal is global overlay
+import VideoModal from './components/VideoModal'; 
 import Home from './pages/Home';
 import Certificates from './pages/Certificates'
 import Blog from './pages/Blog'
+import ScrollToTop from './components/ScrollToTop';
 
 function Layout({ theme, toggleTheme, toggleMobileMenu, isOpen, toggleMenu, isVideoModalOpen, onClose }) {
   return (
@@ -22,24 +23,17 @@ function Layout({ theme, toggleTheme, toggleMobileMenu, isOpen, toggleMenu, isVi
         toggleMobileMenu={toggleMobileMenu}
       />
 
-      {/* MobileMenu and VideoModal might also be global overlays */}
        <MobileMenu
             isOpen={isOpen}
             toggleMenu={toggleMenu}
         />
        {isVideoModalOpen && <VideoModal isOpen={isVideoModalOpen} onClose={onClose} />}
 
-
-      {/* The Outlet is where the matched child route component will render */}
-      <main> {/* Use main for semantic structure */}
+      <main> 
         <Outlet />
       </main>
-
-      {/* Footer is part of the layout */}
       <Footer />
-
-      {/* VideoModal could also be rendered here if it's always tied to the main layout */}
-      {/* {isVideoModalOpen && <VideoModal isOpen={isVideoModalOpen} onClose={onClose} />} */}
+      <ScrollToTop /> 
     </>
   );
 }
@@ -93,7 +87,6 @@ function App() {
                              toggleMenu={toggleMobileMenu} // Pass mobile menu state/toggles
                              isVideoModalOpen={isVideoModalOpen} // Pass modal state/toggles
                              onClose={closeVideoModal}
-                             // You might need to pass openVideoModal down too, if a page uses it
                         />
                     }
                 >
@@ -104,13 +97,6 @@ function App() {
                     <Route path="Blog" element={<Blog />} />
                     
                 </Route>
-
-                {/*
-                  Add any other routes that don't use this specific layout,
-                  e.g., a login page or 404 page.
-                  <Route path="/login" element={<LoginPage />} />
-                  <Route path="*" element={<NotFoundPage />} />
-                */}
             </Routes>
     );
 }
