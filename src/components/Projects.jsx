@@ -15,8 +15,7 @@ function Projects() {
                 </div>
                 <div className="projects-grid">
                     {projectsData.map((project, index) => (
-                        <div className="project-card" key={index}> {/* Add unique key */}
-                            {/* Use style prop for background image */}
+                        <div className="project-card" key={index}>
                             <div className="project-image" style={{ backgroundImage: `url(${project.image})` }}>
                                 <div className="project-overlay"></div>
                             </div>
@@ -41,7 +40,7 @@ function Projects() {
                                     )}
                                     {project.links.huggingface && (
                                          <a href={project.links.huggingface} target="_blank" rel="noopener noreferrer" aria-label={`${project.title} Hugging Face`}>
-                                             {/* Use img tag for HF logo */}
+                                        
                                              <img
                                                 style={{ width: '24px', height: '24px', verticalAlign: 'middle' }} // Adjust size
                                                 src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg"
@@ -49,7 +48,6 @@ function Projects() {
                                              />
                                          </a>
                                     )}
-                                    {/* Add other link types if needed */}
                                 </div>
                             </div>
                         </div>

@@ -33,7 +33,6 @@ function Activities({ onOpenVideoModal }) { // Receive the handler prop
                                                 {' '}{link.text}
                                             </a>
                                         ))}
-                                         {/* Conditionally render video button */}
                                         {activity.hasVideo && (
                                             <button className="video-btn" onClick={onOpenVideoModal}>
                                                  Watch Review
