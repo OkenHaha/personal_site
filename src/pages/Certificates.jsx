@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './certificates.css';
 import { certificateData } from '../data/certificateData';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlassPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 const Certificates = () => {
     // State for modal
@@ -129,7 +131,7 @@ const Certificates = () => {
                                 }}
                             />
                             <div className="hover-overlay">
-                                <i className="fas fa-search-plus"></i>
+                                <FontAwesomeIcon icon={faMagnifyingGlassPlus} style={{fontSize:"50px", color:"#e9ecef   "}}/>
                             </div>
                         </div>
                     </div>
@@ -144,7 +146,7 @@ const Certificates = () => {
                     onClick={(e) => e.target === e.currentTarget && closeModal()}
                 >
                     <span className="close-modal" onClick={closeModal}>
-                        <i className="fas fa-times"></i>
+                        <FontAwesomeIcon icon={faXmark} />
                     </span>
                     <img className="modal-content" src={selectedImage} alt="Certificate" />
                 </div>
