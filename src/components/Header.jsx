@@ -77,6 +77,7 @@ function Header({ theme, toggleTheme, toggleMobileMenu }) {
                     )}
                     {/* These links are always visible */}
                     <Link to="/certificates">Certifications</Link>
+                    <Link to="/chat">AI Chat</Link>
                     <Link to="/blog">Blog</Link>
                 </div>
                 <div className="theme-toggle" onClick={toggleTheme} role="button" aria-label="Toggle theme">

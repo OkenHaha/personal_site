@@ -20,9 +20,8 @@ function About() {
                 {/* Define 'fade-in-up' animation in CSS */}
                 <div className="about-content">
                      {/* Add animation classes/logic if desired */}
-                    <p>I have a passion for coding and believe that technology and science, coupled with human creativity, can transform the world. My journey in coding began in 2014, and since then I've explored various domains across computer science, starting with web development, diving into cybersecurity, mastering Linux, and understanding the depths of the internet's architecture.</p>
-                    <p>Now, I'm focused on the field of AI, particularly drawn to the concept of <span className="highlight">Artificial General Intelligence (AGI)</span>. I believe that aligning AI intelligence with human values and ethics will bring about meaningful advancement for humanity. Beyond my technical pursuits, I maintain a balanced life through activities that challenge both mind and body. Whether it's solving Rubik's cubes to sharpen my problem-solving skills, engaging in strategic games like chess, or playing basketball to stay active, I believe in continuous growth across different dimensions. I also find creative expression through journaling and poetry, which helps me approach technical challenges with a fresh perspective and innovative mindset.</p>
-                    <p>This combination of technical expertise and diverse interests allows me to bring a unique, well-rounded approach to my work in AI and software development, always striving to create solutions that are not just technically sound but also thoughtfully designed with human factors in mind.</p>
+                    <p>I'm Oken, a self-taught developer and AI enthusiast with a passion for blending technology with human emotion. Since 2014, I've been on a journey of continuous learning, from building web applications to exploring the depths of Artificial General Intelligence.</p>
+                    <p>My work is a reflection of my diverse interests—be it coding, writing poetry, or delving into the mysteries of the universe. Let's connect and create something meaningful together.</p>
                 </div>
             </div>
         </section>

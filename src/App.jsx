@@ -13,6 +13,7 @@ import Certificates from './pages/Certificates'
 import Blog from './pages/Blog'
 import ScrollToTop from './components/ScrollToTop';
 import NotFound from './pages/NotFound'
+import ChatInterface from './pages/ChatInterface'
 
 function Layout({ theme, toggleTheme, toggleMobileMenu, isOpen, toggleMenu, isVideoModalOpen, onClose }) {
   return (
@@ -96,7 +97,9 @@ function App() {
                     
                     <Route path="certificates" element={<Certificates />} />
                     <Route path="Blog" element={<Blog />} />
+                    <Route path="chat" element={<ChatInterface />} />
                     <Route path="*" element={<NotFound />} />
+                    
                     
                 </Route>
             </Routes>
