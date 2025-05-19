@@ -28,12 +28,35 @@
   border-right: 1px solid var(--border-color);
   transition: all var(--transition-medium);
   position: relative;
-}
-
-.conversation-sidebar.closed {
-  width: 0;
-  padding: 0;
-  border-right: none;
+  
+  /* Position the toggle when sidebar is open */
+  & + .sidebar-toggle {
+    left: 300px; /* Align with the width of open sidebar */
+    transition: left var(--transition-medium), background-color var(--transition-fast);
+  }
+  
+  &.closed {
+    width: 0;
+    padding: 0;
+    border-right: none;
+    overflow: hidden;
+    visibility: hidden;
+    
+    .sidebar-header,
+    .conversation-list {
+      display: none;
+    }
+    
+    /* Position the toggle when sidebar is closed */
+    & + .sidebar-toggle {
+      left: 0; /* Position at the left edge when sidebar is closed */
+      
+      /* Rotate the chevron icon when sidebar is closed */
+      svg {
+        transform: rotate(180deg);
+      }
+    }
+  }
 }
 
 .sidebar-header {
@@ -42,12 +65,12 @@
   gap: 0.8rem;
   padding: 1rem;
   border-bottom: 1px solid var(--border-color);
-}
-
-.sidebar-header h3 {
-  margin: 0;
-  font-size: 1.2rem;
-  color: var(--text-primary);
+  
+  h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--text-primary);
+  }
 }
 
 .new-chat-btn {
@@ -62,11 +85,11 @@
   border-radius: 6px;
   cursor: pointer;
   transition: background-color var(--transition-fast);
-}
-
-.new-chat-btn:hover {
-  background-color: var(--accent-color);
-  opacity: 0.9;
+  
+  &:hover {
+    background-color: var(--accent-color);
+    opacity: 0.9;
+  }
 }
 
 .conversation-list {
@@ -85,15 +108,15 @@
   cursor: pointer;
   transition: background-color var(--transition-fast);
   position: relative;
-}
-
-.conversation-item:hover {
-  background-color: var(--border-color);
-}
-
-.conversation-item.active {
-  background-color: var(--bg-secondary);
-  border-left: 3px solid var(--accent-color);
+  
+  &:hover {
+    background-color: var(--border-color);
+  }
+  
+  &.active {
+    background-color: var(--bg-secondary);
+    border-left: 3px solid var(--accent-color);
+  }
 }
 
 .conversation-icon {
@@ -139,22 +162,22 @@
   transition: color var(--transition-fast), opacity var(--transition-fast);
   padding: 0.4rem;
   border-radius: 4px;
-}
-
-.conversation-item:hover .delete-conversation {
-  opacity: 1;
-}
-.delete-conversation:hover {
-  color: #ff3333;
-  background-color: rgba(255, 51, 51, 0.1);
+  
+  .conversation-item:hover & {
+    opacity: 1;
+  }
+  
+  &:hover {
+    color: #ff3333;
+    background-color: rgba(255, 51, 51, 0.1);
+  }
 }
 
 /* Sidebar Toggle Button (Desktop) */
 .sidebar-toggle {
   position: absolute;
-  right: -16px;
   top: 50%;
-  transform: translateY(-50%);
+  z-index: 10;
   width: 32px;
   height: 32px;
   background-color: var(--accent-color);
@@ -165,14 +188,24 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 10;
-  transition: background-color var(--transition-fast);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-}
+  transform: translateY(-50%);
+  transition: all var(--transition-medium);
+  
+  svg {
+    transition: transform var(--transition-medium);
+    will-change: transform;
+  }
+  
+  &.closed svg {
+    transform: rotate(180deg);
+  }
 
-.sidebar-toggle:hover {
-  background-color: var(--accent-color);
-  opacity: 0.9;
+  
+  &:hover {
+    background-color: var(--accent-color);
+    opacity: 0.9;
+  }
 }
 
 /* Sidebar Toggle Button (Mobile) */
@@ -275,13 +308,13 @@
 .message-content {
   flex: 1;
   line-height: 1.5;
-}
-
-.message-content.loading {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--text-secondary);
+  
+  &.loading {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+  }
 }
 
 .loading-icon {
@@ -306,14 +339,14 @@
   background-color: var(--bg-primary);
   color: var(--text-primary);
   transition: all var(--transition-medium);
-}
-
-.message-input:focus {
-  border-color: var(--accent-color);
-}
-
-.message-input::placeholder {
-  color: var(--text-secondary);
+  
+  &:focus {
+    border-color: var(--accent-color);
+  }
+  
+  &::placeholder {
+    color: var(--text-secondary);
+  }
 }
 
 .send-button {
@@ -324,16 +357,16 @@
   border-radius: 0 8px 8px 0;
   cursor: pointer;
   transition: background-color var(--transition-medium);
-}
-
-.send-button:hover:not(:disabled) {
-  background-color: var(--accent-color);
-  opacity: 0.9;
-}
-
-.send-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  
+  &:hover:not(:disabled) {
+    background-color: var(--accent-color);
+    opacity: 0.9;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
 /* System message style */
@@ -371,10 +404,10 @@
   font-weight: 500;
   cursor: pointer;
   transition: all var(--transition-medium);
-}
-
-.model-selector-button:hover {
-  border-color: var(--accent-color);
+  
+  &:hover {
+    border-color: var(--accent-color);
+  }
 }
 
 .current-model {
@@ -392,10 +425,10 @@
   font-size: 0.8rem;
   color: var(--text-secondary);
   transition: transform var(--transition-fast);
-}
-
-.dropdown-icon.open {
-  transform: rotate(180deg);
+  
+  &.open {
+    transform: rotate(180deg);
+  }
 }
 
 .model-dropdown {
@@ -428,19 +461,19 @@
   cursor: pointer;
   border-bottom: 1px solid var(--border-color);
   transition: background-color var(--transition-fast);
-}
-
-.model-option:last-child {
-  border-bottom: none;
-}
-
-.model-option:hover {
-  background-color: var(--bg-primary);
-}
-
-.model-option.active {
-  background-color: var(--bg-primary);
-  border-left: 3px solid var(--accent-color);
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  &:hover {
+    background-color: var(--bg-primary);
+  }
+  
+  &.active {
+    background-color: var(--bg-primary);
+    border-left: 3px solid var(--accent-color);
+  }
 }
 
 .model-option-name {
@@ -462,6 +495,15 @@
   
   .conversation-sidebar {
     width: 240px;
+    
+    /* Position the toggle when sidebar is open (tablet) */
+    & + .sidebar-toggle {
+      left: 240px; /* Align with the smaller sidebar width */
+    }
+    
+    &.closed + .sidebar-toggle {
+      left: 0; /* Position at the left edge when sidebar is closed */
+    }
   }
 }
 
@@ -479,11 +521,11 @@
     z-index: 1000;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
     transform: translateX(-100%);
-  }
-  
-  .conversation-sidebar.open {
-    transform: translateX(0);
-    width: 280px;
+    
+    &.open {
+      transform: translateX(0);
+      width: 280px;
+    }
   }
   
   .sidebar-toggle {

@@ -1,7 +1,14 @@
 {
-  "name": "portfolio",
+  "name": "Oken Personal Website",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Personal portfolio website showcasing projects, skills and experience",
+  "author": "Oken Keithellakpam keithellakpamoken@gmail.com (https://okenk.com)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OkenHaha/personal_site"
+  },
+  "homepage": "https://okenk.com",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,6 +22,8 @@
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@vercel/analytics": "^1.5.0",
+    "axios": "^1.9.0",
+    "dotenv": "^16.5.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-markdown": "^10.1.0",
@@ -29,6 +38,7 @@
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
+    "sass-embedded": "^1.89.0",
     "vite": "^6.2.0"
   }
 }

@@ -14,7 +14,8 @@ import {
   faChevronRight,
   faXmark
 } from '@fortawesome/free-solid-svg-icons';
-import './ChatInterface.css';
+import './ChatInterface.scss';
+import axios from 'axios';
 
 const ChatInterface = () => {
   const [messages, setMessages] = useState([
@@ -103,19 +104,43 @@ const ChatInterface = () => {
     setInput('');
     setIsLoading(true);
     
-    // Simulate API response delay (replace with actual API call)
-    setTimeout(() => {
-      // Example response - in a real app, you'd call your backend or an AI API
-      const response = { 
-        role: 'assistant', 
-        content: `[${models.find(m => m.id === currentModel).name}] Thanks for your message! This is a simulated response to "${input}". In a real implementation, this would connect to an AI service.`
+    try {
+      const response = await axios.post(
+        'https://openrouter.ai/api/v1/chat/completions',
+        {
+          model: models.find(m => m.id === currentModel).id,
+          messages: updatedMessages.filter(m => m.role !== 'system'),
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${process.env.OPEN_ROUTER_KEY}`,
+            'HTTP-Referer': process.env.SITE,
+            'X-Title': process.env.SITE_NAME,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      
+      const assistantMessage = {
+        role: 'assistant',
+        content: response.data.choices[0].message.content
       };
       
-      const updatedWithResponse = [...updatedMessages, response];
+      const updatedWithResponse = [...updatedMessages, assistantMessage];
       setMessages(updatedWithResponse);
       updateActiveConversation(updatedWithResponse);
+    } catch (error) {
+      const errorMessage = {
+        role: 'assistant',
+        content: `Error: ${error.message}${error.response ? ` - ${error.response.data.error.message}` : ''}`
+      };
+      
+      const updatedWithResponse = [...updatedMessages, errorMessage];
+      setMessages(updatedWithResponse);
+      updateActiveConversation(updatedWithResponse);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   const handleModelChange = (modelId) => {
@@ -257,13 +282,19 @@ const ChatInterface = () => {
         
         <div className="chat-container">
           {/* Sidebar Toggle Button (Mobile) */}
-          <button 
-            className="sidebar-toggle-mobile" 
+          {/* Sidebar Toggle Button (Mobile) */}
+          <button
+            className="sidebar-toggle-mobile"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           >
             <FontAwesomeIcon icon={isSidebarOpen ? faXmark : faBars} />
           </button>
-          
+          <button 
+              className="sidebar-toggle" 
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            >
+              <FontAwesomeIcon icon={isSidebarOpen ? faChevronLeft : faChevronRight} />
+            </button>
           {/* Conversation Sidebar */}
           <div className={`conversation-sidebar ${isSidebarOpen ? 'open' : 'closed'}`}>
             <div className="sidebar-header">
@@ -299,13 +330,8 @@ const ChatInterface = () => {
               ))}
             </div>
             
-            {/* Sidebar Toggle (Desktop) */}
-            <button 
-              className="sidebar-toggle" 
-              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            >
-              <FontAwesomeIcon icon={isSidebarOpen ? faChevronLeft : faChevronRight} />
-            </button>
+            
+            
           </div>
           
           <div className="chat-window">
