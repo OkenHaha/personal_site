@@ -168,7 +168,7 @@ const ChatInterface = () => {
       const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${import.meta.env.VITE_OPEN_ROUTER_KEY}`,
+          "Authorization": `Bearer ${import.meta.env.VITE_OPEN_ROUTER}`,
           "HTTP-Referer": import.meta.env.VITE_SITE_URL,
           "X-Title": import.meta.env.VITE_SITE_NAME,
           "Content-Type": "application/json"
@@ -331,7 +331,7 @@ const ChatInterface = () => {
   };
   const toggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
-  };
+  };  
 
   return (
     <div className="section">
