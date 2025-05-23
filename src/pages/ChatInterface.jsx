@@ -24,7 +24,7 @@ import {
 import './ChatInterface.scss';
 
 const ChatInterface = () => {
-  const SYSTEM_PROMPT = "You are Oken's AI assistant. You are helpful, creative, and friendly. When providing code, always use Markdown code blocks with the language specified. When providing mathematical formulas, use LaTeX delimiters like $...$ for inline math and $$...$$ for display math.";
+  const SYSTEM_PROMPT = "You are Oken's AI assistant. You are helpful, creative, and friendly. Always provide complete, conversational responses. For mathematical questions, explain your reasoning and provide the answer in plain text. Avoid using LaTeX boxed notation or raw mathematical expressions. When providing code, use Markdown code blocks with the language specified. Keep your responses natural and easy to read.";
 
   const [messages, setMessages] = useState([
     { 
@@ -34,7 +34,7 @@ const ChatInterface = () => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [currentModel, setCurrentModel] = useState('deepseek/deepseek-r1-zero:free');
+  const [currentModel, setCurrentModel] = useState('deepseek/deepseek-chat-v3-0324:free');
   const [isModelMenuOpen, setIsModelMenuOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [conversations, setConversations] = useState([
@@ -53,13 +53,12 @@ const ChatInterface = () => {
   const modelMenuRef = useRef(null);
 
   const models = [
-    { id: 'deepseek/deepseek-r1-zero:free', name: 'DeepSeek R1-Zero', description: 'Specialized test model from DeepSeek' },
-    { id: 'google/gemma-3n-e4b-it:free', name: 'Gemma 3N Intense', description: 'Google\'s compact and efficient model' },
-    { id: 'deepseek/deepseek-prover-v2:free', name: 'DeepSeek Prover', description: 'Mathematical reasoning focused model' },
-    { id: 'qwen/qwen3-235b-a22b:free', name: 'Qwen3 235B', description: 'Tencent\'s latest wide-context reasoning model' },
-    { id: 'tngtech/deepseek-r1t-chimera:free', name: 'DeepSeek Chimera', description: 'TNGTechs multimodal analysis model' },
-    { id: 'agentica-org/deepcoder-14b-preview:free', name: 'DeepCoder 14B', description: 'Specialist in coding & reasoning (preview)' },
-    { id: 'deepseek/deepseek-chat-v3-0324:free', name: 'DeepSeek Chat V3', description: 'Specialized conversational model (optimized version)' }
+    { id: 'deepseek/deepseek-chat-v3-0324:free', name: 'DeepSeek Chat V3', description: 'Conversational model - recommended' },
+    { id: 'deepseek/deepseek-r1-zero:free', name: 'DeepSeek R1-Zero', description: 'Advanced reasoning model' },
+    { id: 'deepseek/deepseek-prover-v2:free', name: 'DeepSeek Prover', description: 'Mathematical reasoning focused' },
+    { id: 'qwen/qwen3-235b-a22b:free', name: 'Qwen3 235B', description: 'Wide-context reasoning model' },
+    { id: 'tngtech/deepseek-r1t-chimera:free', name: 'DeepSeek Chimera', description: 'Multimodal analysis model' },
+    { id: 'agentica-org/deepcoder-14b-preview:free', name: 'DeepCoder 14B', description: 'Coding specialist (preview)' }
   ];
 
   // Custom components for ReactMarkdown
@@ -97,6 +96,15 @@ const ChatInterface = () => {
           {children}
         </code>
       );
+    },
+    // Handle potential LaTeX formatting issues
+    p({ children }) {
+      // Check if the paragraph contains only LaTeX-like content
+      const text = String(children);
+      if (text.match(/^<think>[\s\S]*<\/think>$/)) {
+        return null; // Hide thinking blocks
+      }
+      return <p>{children}</p>;
     }
   };
 
@@ -107,6 +115,36 @@ const ChatInterface = () => {
     } catch (err) {
       console.error('Failed to copy text: ', err);
     }
+  };
+
+  // Function to clean response content
+  const cleanResponseContent = (content) => {
+    if (!content) return '';
+    
+    // Remove thinking blocks that some models like R1 might include
+    let cleaned = content.replace(/<think>[\s\S]*?<\/think>/g, '');
+    
+    // Handle LaTeX boxed answers (convert \boxed{answer} to just the answer)
+    cleaned = cleaned.replace(/\\boxed\{([^}]+)\}/g, '$1');
+    
+    // Handle standalone LaTeX expressions and convert them to proper markdown
+    cleaned = cleaned.replace(/^\s*\\\w+\{([^}]+)\}\s*$/gm, '$1');
+    
+    // Remove excessive LaTeX formatting that might break rendering
+    cleaned = cleaned.replace(/\$\$\s*\$\$/g, '');
+    
+    // Clean up any double spaces or newlines
+    cleaned = cleaned.replace(/\n\s*\n\s*\n/g, '\n\n');
+    
+    // If the response is still just LaTeX or very short, make it more conversational
+    if (cleaned.match(/^[\d\s\+\-\*\/\=\.]+$/) || cleaned.length < 10) {
+      // For simple math answers, add context
+      if (cleaned.match(/^\d+(\.\d+)?$/)) {
+        cleaned = `The answer is ${cleaned}.`;
+      }
+    }
+    
+    return cleaned.trim();
   };
 
   // Auto-scroll to bottom when messages change
@@ -175,23 +213,45 @@ const ChatInterface = () => {
         },
         body: JSON.stringify({
           "model": currentModel,
-          "messages": messagesToSend
+          "messages": messagesToSend,
+          "temperature": 0.7,
+          "max_tokens": 4000,
+          "top_p": 0.9,
+          "frequency_penalty": 0.1,
+          "presence_penalty": 0.1,
+          "stream": false
         })
       });
 
       if (!response.ok) {
-        throw new Error(`API Error: ${response.status} ${response.statusText}`);
+        const errorText = await response.text();
+        console.error('API Error Response:', errorText);
+        throw new Error(`API Error: ${response.status} ${response.statusText}. ${errorText}`);
       }
 
       const data = await response.json();
       
+      // Debug log for troubleshooting
+      console.log('API Response:', data);
+      
       if (!data.choices || data.choices.length === 0) {
-        throw new Error('No response from model');
+        console.error('Invalid API response structure:', data);
+        throw new Error('No response from model - the model may be unavailable');
       }
+
+      // Check if the response has content
+      const messageContent = data.choices[0]?.message?.content;
+      if (!messageContent) {
+        console.error('No message content in response:', data.choices[0]);
+        throw new Error('Empty response from model');
+      }
+
+      // Clean the response content
+      const cleanedContent = cleanResponseContent(messageContent);
 
       const assistantMessage = {
         role: 'assistant',
-        content: data.choices[0].message.content
+        content: cleanedContent
       };
 
       const finalMessages = [...updatedMessages, assistantMessage];
@@ -199,9 +259,10 @@ const ChatInterface = () => {
       updateActiveConversation(finalMessages);
 
     } catch (error) {
+      console.error('Full error:', error);
       const errorMessage = {
         role: 'assistant',
-        content: `Error: ${error.message}`
+        content: `I apologize, but I encountered an error: ${error.message}. Please try again or switch to a different model.`
       };
       const finalMessages = [...updatedMessages, errorMessage];
       setMessages(finalMessages);
@@ -377,8 +438,10 @@ const ChatInterface = () => {
           >
             <FontAwesomeIcon icon={isSidebarOpen ? faXmark : faBars} />
           </button>
+          
+          {/* Desktop Sidebar Toggle - moves with sidebar */}
           <button 
-            className="sidebar-toggle" 
+            className={`sidebar-toggle-desktop ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           >
             <FontAwesomeIcon icon={isSidebarOpen ? faChevronLeft : faChevronRight} />
