@@ -1,5 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { okaidia } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import 'katex/dist/katex.min.css'; // Import KaTeX CSS for LaTeX rendering
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faPaperPlane, 
@@ -12,12 +18,14 @@ import {
   faTrash,
   faChevronLeft,
   faChevronRight,
-  faXmark
+  faXmark,
+  faCopy
 } from '@fortawesome/free-solid-svg-icons';
 import './ChatInterface.scss';
-import axios from 'axios';
 
 const ChatInterface = () => {
+  const SYSTEM_PROMPT = "You are Oken's AI assistant. You are helpful, creative, and friendly. When providing code, always use Markdown code blocks with the language specified. When providing mathematical formulas, use LaTeX delimiters like $...$ for inline math and $$...$$ for display math.";
+
   const [messages, setMessages] = useState([
     { 
       role: 'assistant',
@@ -26,11 +34,11 @@ const ChatInterface = () => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [currentModel, setCurrentModel] = useState('gpt-4');
+  const [currentModel, setCurrentModel] = useState('deepseek/deepseek-r1-zero:free');
   const [isModelMenuOpen, setIsModelMenuOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [conversations, setConversations] = useState([
-    { id: 'current', title: 'Current Chat', preview: 'Hello! I\'m Keith\'s AI assistant...', active: true, messages: messages },
+    { id: 'current', title: 'Current Chat', preview: 'Hello! I\'m Oken\'s AI assistant...', active: true, messages: messages },
     { id: 'chat1', title: 'Website Development', preview: 'How do I optimize React performance?', active: false, messages: [
       { role: 'user', content: 'How do I optimize React performance?' },
       { role: 'assistant', content: 'To optimize React performance, you can use: memo, useCallback, useMemo, and virtual DOM optimization techniques...' }
@@ -38,10 +46,6 @@ const ChatInterface = () => {
     { id: 'chat2', title: 'Portfolio Ideas', preview: 'What should I include in my portfolio?', active: false, messages: [
       { role: 'user', content: 'What should I include in my portfolio?' },
       { role: 'assistant', content: 'A good developer portfolio should showcase your best projects, skills, and experience...' }
-    ]},
-    { id: 'chat3', title: 'AI Integration', preview: 'How can I integrate AI into my website?', active: false, messages: [
-      { role: 'user', content: 'How can I integrate AI into my website?' },
-      { role: 'assistant', content: 'You can integrate AI into your website using APIs like OpenAI, HuggingFace, or by implementing...' }
     ]}
   ]);
 
@@ -49,11 +53,61 @@ const ChatInterface = () => {
   const modelMenuRef = useRef(null);
 
   const models = [
-    { id: 'gpt-4', name: 'GPT-4', description: 'Most capable model, best for complex tasks' },
-    { id: 'gpt-3.5', name: 'GPT-3.5', description: 'Fast and efficient for standard queries' },
-    { id: 'claude-3', name: 'Claude 3', description: 'Strong reasoning and comprehension' },
-    { id: 'llama-3', name: 'Llama 3', description: 'Open-source alternative model' }
+    { id: 'deepseek/deepseek-r1-zero:free', name: 'DeepSeek R1-Zero', description: 'Specialized test model from DeepSeek' },
+    { id: 'google/gemma-3n-e4b-it:free', name: 'Gemma 3N Intense', description: 'Google\'s compact and efficient model' },
+    { id: 'deepseek/deepseek-prover-v2:free', name: 'DeepSeek Prover', description: 'Mathematical reasoning focused model' },
+    { id: 'qwen/qwen3-235b-a22b:free', name: 'Qwen3 235B', description: 'Tencent\'s latest wide-context reasoning model' },
+    { id: 'tngtech/deepseek-r1t-chimera:free', name: 'DeepSeek Chimera', description: 'TNGTechs multimodal analysis model' },
+    { id: 'agentica-org/deepcoder-14b-preview:free', name: 'DeepCoder 14B', description: 'Specialist in coding & reasoning (preview)' },
+    { id: 'deepseek/deepseek-chat-v3-0324:free', name: 'DeepSeek Chat V3', description: 'Specialized conversational model (optimized version)' }
   ];
+
+  // Custom components for ReactMarkdown
+  const MarkdownComponents = {
+    code({ node, inline, className, children, ...props }) {
+      const match = /language-(\w+)/.exec(className || '');
+      const language = match ? match[1] : '';
+      
+      if (!inline && language) {
+        return (
+          <div className="code-block-container">
+            <div className="code-block-header">
+              <span className="code-language">{language}</span>
+              <button 
+                className="copy-code-btn"
+                onClick={() => copyToClipboard(String(children).replace(/\n$/, ''))}
+              >
+                <FontAwesomeIcon icon={faCopy} />
+              </button>
+            </div>
+            <SyntaxHighlighter
+              style={okaidia}
+              language={language}
+              PreTag="div"
+              {...props}
+            >
+              {String(children).replace(/\n$/, '')}
+            </SyntaxHighlighter>
+          </div>
+        );
+      }
+      
+      return (
+        <code className={className} {...props}>
+          {children}
+        </code>
+      );
+    }
+  };
+
+  const copyToClipboard = async (text) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      // You could add a toast notification here
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -98,46 +152,60 @@ const ChatInterface = () => {
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
     
-    // Update the active conversation with the new message
-    updateActiveConversation(updatedMessages);
-    
     setInput('');
     setIsLoading(true);
     
     try {
-      const response = await axios.post(
-        'https://openrouter.ai/api/v1/chat/completions',
-        {
-          model: models.find(m => m.id === currentModel).id,
-          messages: updatedMessages.filter(m => m.role !== 'system'),
+      // Create messages array with system prompt
+      const messagesToSend = [
+        { role: 'system', content: SYSTEM_PROMPT },
+        ...updatedMessages.map(msg => ({
+          role: msg.role,
+          content: msg.content
+        }))
+      ];
+
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${import.meta.env.VITE_OPEN_ROUTER_KEY}`,
+          "HTTP-Referer": import.meta.env.VITE_SITE_URL,
+          "X-Title": import.meta.env.VITE_SITE_NAME,
+          "Content-Type": "application/json"
         },
-        {
-          headers: {
-            'Authorization': `Bearer ${process.env.OPEN_ROUTER_KEY}`,
-            'HTTP-Referer': process.env.SITE,
-            'X-Title': process.env.SITE_NAME,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
+        body: JSON.stringify({
+          "model": currentModel,
+          "messages": messagesToSend
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
       
+      if (!data.choices || data.choices.length === 0) {
+        throw new Error('No response from model');
+      }
+
       const assistantMessage = {
         role: 'assistant',
-        content: response.data.choices[0].message.content
+        content: data.choices[0].message.content
       };
-      
-      const updatedWithResponse = [...updatedMessages, assistantMessage];
-      setMessages(updatedWithResponse);
-      updateActiveConversation(updatedWithResponse);
+
+      const finalMessages = [...updatedMessages, assistantMessage];
+      setMessages(finalMessages);
+      updateActiveConversation(finalMessages);
+
     } catch (error) {
       const errorMessage = {
         role: 'assistant',
-        content: `Error: ${error.message}${error.response ? ` - ${error.response.data.error.message}` : ''}`
+        content: `Error: ${error.message}`
       };
-      
-      const updatedWithResponse = [...updatedMessages, errorMessage];
-      setMessages(updatedWithResponse);
-      updateActiveConversation(updatedWithResponse);
+      const finalMessages = [...updatedMessages, errorMessage];
+      setMessages(finalMessages);
+      updateActiveConversation(finalMessages);
     } finally {
       setIsLoading(false);
     }
@@ -186,7 +254,7 @@ const ChatInterface = () => {
       messages: [
         { 
           role: 'assistant',
-          content: 'Hello! I\'m Keith\'s AI assistant. How can I help you today?'
+          content: 'Hello! I\'m Oken\'s AI assistant. How can I help you today?'
         }
       ]
     };
@@ -244,6 +312,27 @@ const ChatInterface = () => {
       : text;
   };
 
+  
+  const sidebarVariants = {
+    open: {
+      x: 0,  //Slide in to the left
+      transition: {
+        duration: 0.3,
+        ease: "easeOut", // Smooth easing
+      },
+    },
+    closed: {
+      x: -250, //Slide out to the left
+      transition: {
+        duration: 0.3,
+        ease: "easeOut", // Smooth easing
+      },
+    },
+  };
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev);
+  };
+
   return (
     <div className="section">
       <div className="section-container chat-interface-container">
@@ -282,7 +371,6 @@ const ChatInterface = () => {
         
         <div className="chat-container">
           {/* Sidebar Toggle Button (Mobile) */}
-          {/* Sidebar Toggle Button (Mobile) */}
           <button
             className="sidebar-toggle-mobile"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -290,11 +378,12 @@ const ChatInterface = () => {
             <FontAwesomeIcon icon={isSidebarOpen ? faXmark : faBars} />
           </button>
           <button 
-              className="sidebar-toggle" 
-              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            >
-              <FontAwesomeIcon icon={isSidebarOpen ? faChevronLeft : faChevronRight} />
-            </button>
+            className="sidebar-toggle" 
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          >
+            <FontAwesomeIcon icon={isSidebarOpen ? faChevronLeft : faChevronRight} />
+          </button>
+
           {/* Conversation Sidebar */}
           <div className={`conversation-sidebar ${isSidebarOpen ? 'open' : 'closed'}`}>
             <div className="sidebar-header">
@@ -329,9 +418,6 @@ const ChatInterface = () => {
                 </div>
               ))}
             </div>
-            
-            
-            
           </div>
           
           <div className="chat-window">
@@ -350,7 +436,13 @@ const ChatInterface = () => {
                     </div>
                   )}
                   <div className="message-content">
-                    <ReactMarkdown>{message.content}</ReactMarkdown>
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm, remarkMath]}
+                      rehypePlugins={[rehypeKatex]}
+                      components={MarkdownComponents}
+                    >
+                      {message.content}
+                    </ReactMarkdown>
                   </div>
                 </div>
               ))}

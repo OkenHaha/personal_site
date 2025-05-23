@@ -3,7 +3,52 @@
   flex-direction: column;
   margin: 0 auto;
 }
+.code-block-container {
+  position: relative;
+  margin: 1rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+  
+  .code-block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #2d3748;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    
+    .code-language {
+      color: #a0aec0;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    
+    .copy-code-btn {
+      background: transparent;
+      border: none;
+      color: #a0aec0;
+      cursor: pointer;
+      padding: 0.25rem;
+      
+      &:hover {
+        color: #ffffff;
+      }
+    }
+  }
+  
+  pre {
+    margin: 0 !important;
+  }
+}
 
+// LaTeX math styling
+.katex {
+  font-size: 1.1em;
+}
+
+.katex-display {
+  margin: 1rem 0;
+}
 /* Layout Container */
 .chat-container {
   display: flex;
