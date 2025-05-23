@@ -49,6 +49,7 @@ function MobileMenu({ isOpen, toggleMenu }) {
                 )}
                 {/* These links are always visible */}
                 <Link to="/certificates" onClick={toggleMenu}>Certifications</Link>
+                <Link to="/chat">AI Chat</Link>
                 <Link to="/blog" onClick={toggleMenu}>Blog</Link>
             </div>
             <div className="mobile-social">
