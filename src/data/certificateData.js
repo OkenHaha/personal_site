@@ -4,6 +4,12 @@ export const certificateData = [
     // Udemy Certificates
     {
         category: 'udemy',
+        badge: { type: 'ai', text: 'Generative AI' },
+        image: '/certificates/udemy/building-gen-ai-apps.jpg',
+        alt: 'React JS Complete Guide'
+    },
+    {
+        category: 'udemy',
         badge: { type: 'frontend', text: 'Frontend' },
         image: '/certificates/udemy/React-JS--Complete-Guide-for-Frontend-Web-Development-[2021].jpg',
         alt: 'React JS Complete Guide'
