@@ -4,11 +4,13 @@
   margin: 0 auto;
 }
 
+// Code block fixes for horizontal overflow
 .code-block-container {
   position: relative;
   margin: 1rem 0;
   border-radius: 8px;
   overflow: hidden;
+  max-width: 100%;
 
   .code-block-header {
     display: flex;
@@ -40,22 +42,60 @@
     }
   }
 
-  pre {
-    margin: 0 !important;
-    background: var(--bg-primary) !important;
-    border: 1px solid var(--border-color);
-    border-top: none;
+  .code-block-wrapper {
+    overflow-x: auto;
+    max-width: 100%;
+    
+    pre {
+      margin: 0 !important;
+      background: var(--bg-primary) !important;
+      border: 1px solid var(--border-color);
+      border-top: none;
+      overflow-x: auto;
+      
+      code {
+        display: block;
+        overflow-x: auto;
+        white-space: pre;
+      }
+    }
   }
 }
 
-// LaTeX math styling
+// Inline code styling
+.inline-code {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 0.2em 0.4em;
+  font-size: 0.9em;
+  color: var(--accent-color);
+}
+
+// LaTeX math styling fixes
 .katex {
   font-size: 1.1em;
   color: var(--text-primary);
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
 }
 
 .katex-display {
   margin: 1rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  
+  .katex {
+    display: block;
+    text-align: center;
+  }
+}
+
+// Markdown block wrapper
+.markdown-block {
+  overflow-x: auto;
+  max-width: 100%;
 }
 
 /* Layout Container */
@@ -82,6 +122,7 @@
   border-right: 1px solid var(--border-color);
   transition: all var(--transition-medium);
   position: relative;
+  flex-shrink: 0;
 
   &.closed {
     width: 0;
@@ -172,6 +213,7 @@
 .conversation-info {
   flex: 1;
   overflow: hidden;
+  min-width: 0; // Important for text truncation
 }
 
 .conversation-title {
@@ -211,7 +253,7 @@
   }
 }
 
-/* Styles for the desktop sidebar toggle button */
+/* Sidebar Toggle Buttons */
 .sidebar-toggle-desktop {
   position: absolute;
   top: 50%;
@@ -236,10 +278,10 @@
   }
 
   &.sidebar-open {
-    left: 300px; /* Adjust to match open sidebar width */
+    left: 300px;
   }
   &.sidebar-closed {
-    left: 0px;   /* Position at the edge when sidebar is closed */
+    left: 0px;
   }
 
   &:hover {
@@ -248,7 +290,6 @@
   }
 }
 
-/* Sidebar Toggle Button (Mobile) */
 .sidebar-toggle-mobile {
   position: fixed;
   top: 80px;
@@ -259,14 +300,13 @@
   color: white;
   border: none;
   border-radius: 50%;
-  display: none; /* Hidden by default, shown on mobile */
+  display: none;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 1001; // Original was 1001, then a comment for 1002. Keeping 1001 or use 1002 if sidebar has 1000.
+  z-index: 1001;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   font-size: 1.2rem;
-  /* z-index: 1002; */ /* Ensure it's on top of other elements - if sidebar is 1000, this or 1001 is fine */
 }
 
 /* Chat Window Styles */
@@ -277,11 +317,13 @@
   height: 100%;
   background-color: var(--bg-secondary);
   transition: background-color var(--transition-medium);
+  min-width: 0; // Important for flex children
 }
 
 .messages-container {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden; // Prevent horizontal scroll
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
@@ -298,6 +340,8 @@
   animation: fadeIn 0.3s ease-in-out;
   color: var(--text-primary);
   transition: background-color var(--transition-medium), color var(--transition-medium);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 @keyframes fadeIn {
@@ -326,7 +370,7 @@
 
 .message-avatar {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   width: 36px;
   height: 36px;
@@ -344,11 +388,15 @@
 
 .avatar-icon {
   font-size: 1rem;
+  margin-top: 8px;
 }
 
 .message-content {
   flex: 1;
-  line-height: 1.5;
+  line-height: 1.6;
+  min-width: 0; // Important for overflow handling
+  overflow-wrap: break-word;
+  word-break: break-word;
 
   &.loading {
     display: flex;
@@ -356,30 +404,102 @@
     gap: 0.5rem;
     color: var(--text-secondary);
   }
+
+  // Fix for markdown content overflow
+  > * {
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
+
+  // Fix for lists
+  ul, ol {
+    padding-left: 1.5rem;
+    margin: 0.5rem 0;
+  }
+
+  // Fix for blockquotes
+  blockquote {
+    border-left: 4px solid var(--border-color);
+    padding-left: 1rem;
+    margin: 0.5rem 0;
+    color: var(--text-secondary);
+  }
+
+  // Fix for tables
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    overflow-x: auto;
+    display: block;
+    margin: 1rem 0;
+
+    th, td {
+      border: 1px solid var(--border-color);
+      padding: 0.5rem;
+      text-align: left;
+    }
+
+    th {
+      background-color: var(--bg-primary);
+      font-weight: 600;
+    }
+  }
+
+  // Fix for images
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 0.5rem 0;
+  }
+
+  // Fix for horizontal rules
+  hr {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 1rem 0;
+  }
+
+  // Fix for preformatted text
+  pre {
+    overflow-x: auto;
+    max-width: 100%;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
 }
 
 .loading-icon {
   color: var(--accent-color);
 }
 
+/* Input Container with Textarea */
 .input-container {
   display: flex;
+  align-items: flex-end;
   padding: 1rem;
   background-color: var(--bg-secondary);
   border-top: 1px solid var(--border-color);
   transition: background-color var(--transition-medium), border-color var(--transition-medium);
+  gap: 0.5rem;
 }
 
 .message-input {
   flex: 1;
   padding: 0.75rem 1rem;
   border: 1px solid var(--border-color);
-  border-radius: 8px 0 0 8px;
+  border-radius: 8px;
   font-size: 1rem;
+  font-family: inherit;
   outline: none;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   transition: all var(--transition-medium);
+  resize: none;
+  overflow-y: auto;
+  min-height: 42px;
+  max-height: 200px;
+  line-height: 1.5;
 
   &:focus {
     border-color: var(--accent-color);
@@ -388,6 +508,20 @@
   &::placeholder {
     color: var(--text-secondary);
   }
+
+  /* Custom scrollbar for textarea */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
+  }
 }
 
 .send-button {
@@ -395,9 +529,13 @@
   background-color: var(--accent-color);
   color: white;
   border: none;
-  border-radius: 0 8px 8px 0;
+  border-radius: 8px;
   cursor: pointer;
   transition: background-color var(--transition-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
 
   &:hover:not(:disabled) {
     background-color: var(--accent-color);
@@ -528,6 +666,24 @@
   color: var(--text-secondary);
 }
 
+/* Custom scrollbar for messages container */
+.messages-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.messages-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.messages-container::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+  
+  &:hover {
+    background: var(--text-secondary);
+  }
+}
+
 /* Responsive Styles */
 @media (max-width: 992px) {
   .chat-container {
@@ -537,9 +693,10 @@
   .conversation-sidebar {
     width: 240px;
   }
+  
   .sidebar-toggle-desktop {
     &.sidebar-open {
-      left: 240px; /* Adjust for tablet sidebar width */
+      left: 240px;
     }
   }
 }
@@ -557,20 +714,20 @@
     width: 280px;
     z-index: 1000;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-    transform: translateX(-100%); /* Slides out */
+    transform: translateX(-100%);
 
     &.open {
-      transform: translateX(0); /* Slides in */
+      transform: translateX(0);
       width: 280px;
     }
   }
 
-  .sidebar-toggle-desktop { /* Hide desktop toggle on mobile */
+  .sidebar-toggle-desktop {
     display: none;
   }
 
   .sidebar-toggle-mobile {
-    display: flex; /* Show mobile toggle */
+    display: flex;
   }
 
   .model-selector-button {
@@ -583,6 +740,10 @@
 
   .message {
     max-width: 95%;
+  }
+
+  .message-input {
+    font-size: 16px; // Prevents zoom on iOS
   }
 }
 
@@ -607,5 +768,36 @@
 
   .input-container {
     padding: 0.75rem;
+  }
+
+  .send-button {
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  .sidebar-toggle-mobile,
+  .sidebar-toggle-desktop,
+  .conversation-sidebar,
+  .model-selector-container,
+  .input-container {
+    display: none !important;
+  }
+  
+  .chat-container {
+    height: auto;
+    box-shadow: none;
+    border: none;
+  }
+  
+  .messages-container {
+    height: auto;
+    overflow: visible;
+  }
+  
+  .message {
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 }
