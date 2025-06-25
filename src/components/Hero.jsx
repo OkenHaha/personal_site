@@ -29,7 +29,7 @@ function Hero() {
                         <a href="#projects" className="btn primary-btn" onClick={(e) => handleNavClick(e, '#projects')}>View Projects</a>
                         {/* Ensure resume path is correct in public folder */}
                         <a
-                           href="https://drive.google.com/file/d/1buwJPXsWNRsxhLZEJU4PbPYowwjn9uWV/view"
+                           href="https://drive.google.com/file/d/1jZjN2ePRto7oOkjJkxJWugD81Zbbh8C8/view?usp=sharing"
                            target="_blank"
                            rel="noopener noreferrer"
                            className="btn secondary-btn"
