@@ -20,8 +20,8 @@ function About() {
                 {/* Define 'fade-in-up' animation in CSS */}
                 <div className="about-content">
                      {/* Add animation classes/logic if desired */}
-                    <p>I'm Oken, a self-taught developer and AI enthusiast with a passion for blending technology with human emotion. Since 2014, I've been on a journey of continuous learning, from building web applications to exploring the depths of Artificial General Intelligence.</p>
-                    <p>My work is a reflection of my diverse interests—be it coding, writing poetry, or delving into the mysteries of the universe. Let's connect and create something meaningful together.</p>
+                    <p>I'm Oken, a self-taught developer with a passion for blending technology with human emotion. Since 2014, I've been on a journey of continuous learning, from building web applications to exploring the depths of Artificial General Intelligence.</p>
+                    <p>I've been on a journey of making imagination / vision turn into reality with the help of the magical world of tech and programming. Ever since I discovered how I could write words and just turn it into reality, and now, creating and training AI models as if it's a new form of life, nothing ever cuts short for me to quence my thirst for curiosity.</p>
                 </div>
             </div>
         </section>

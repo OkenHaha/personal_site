@@ -1,6 +1,14 @@
 export const experienceData = [
     {
-        date: "Dec 2020 - Jan 2025", // Review this date
+        date: "June 2025 - Present", // Review this date
+        title: "AI Specialist",
+        location: "Cubeten Technologies, Manipur",
+        points: [
+            "Working as an AI speicalist to deliver AI powered solutions.",
+        ],
+    },
+    {
+        date: "Dec 2020 - Present", // Review this date
         title: "Freelance",
         location: "Manipur / Remote",
         points: [
