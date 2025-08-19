@@ -15,6 +15,8 @@ import ScrollToTop from './components/ScrollToTop';
 import NotFound from './pages/NotFound'
 import ChatInterface from './pages/ChatInterface'
 
+import Home2 from './pages/Home2'
+
 function Layout({ theme, toggleTheme, toggleMobileMenu, isOpen, toggleMenu, isVideoModalOpen, onClose }) {
   return (
     <>
