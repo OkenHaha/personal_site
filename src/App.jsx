@@ -76,8 +76,17 @@ function App() {
 
     const openVideoModal = () => setIsVideoModalOpen(true); // Need to pass this down if used in a page
     const closeVideoModal = () => setIsVideoModalOpen(false);
-
-
+/*
+<Layout
+                             theme={theme} // Pass props down to Layout
+                             toggleTheme={toggleTheme}
+                             toggleMobileMenu={toggleMobileMenu}
+                             isOpen={isMobileMenuOpen}
+                             toggleMenu={toggleMobileMenu} // Pass mobile menu state/toggles
+                             isVideoModalOpen={isVideoModalOpen} // Pass modal state/toggles
+                             onClose={closeVideoModal}
+                        />
+                        */
     return (
             <Routes>
                 <Route

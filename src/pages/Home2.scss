@@ -1,81 +1,169 @@
 .home2-container {
-    width: 100%;
-    height: 100vh;
-    background: #030303;
-    position: relative;
-    overflow: hidden;
+  width: 100%;
+  height: 100vh;
+  background: #000000;
+  position: relative;
+  overflow: hidden;
+}
+
+.lamp-background {
+  position: absolute;
+  bottom: 20%;
+  right: 1%;
+  width: 100%;
+  height: 100%;
+  background-image: url('/lamp2.svg');
+  background-position: center;
+  background-size: 40%;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+
+.glow-base {
+  position: absolute;
+  top: calc(44% - 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 120vh;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0.35) 10%,
+    rgba(255, 255, 255, 0.22) 20%,
+    rgba(255, 255, 255, 0.16) 30%,
+    rgba(255, 255, 255, 0.08) 40%,
+    rgba(255, 255, 255, 0) 50%
+  );
+  box-shadow: 0 0 120px 90px rgba(255, 230, 170, 0.25);
+  clip-path: polygon(
+    calc(48% - 7px) 0%,
+    calc(53% + 4px) 0%,
+    70% 50%,
+    30% 50%
+  );
+  z-index: 1;
+  pointer-events: none;
+  filter: blur(1px);
+}
+
+/* Bug styles */
+.bug {
+  position: absolute;
+  background: rgba(255, 255, 200, 0.9);
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(255, 255, 180, 0.8);
+  animation: flicker 1.5s infinite, orbitAndDrift 15s infinite linear;
+  opacity: 0.5;
+  transform-origin: center;
+  z-index: 2;
+}
+
+@keyframes flicker {
+  0% { opacity: 0.5; }
+  40% { opacity: 0.3; }
+  70% { opacity: 0.4; }
+}
+
+@keyframes orbitAndDrift {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
   }
-  
-  .lamp-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('/lamp2.svg');
-    background-position: center;
-    background-size: cover;
-    z-index: 1;
+  70% {
+    transform: translate(
+      calc(var(--drift-direction) * var(--drift-distance)), 
+      0
+    ) rotate(calc(var(--rotation-direction) * 720deg));
   }
-  
-  .light-triangle {
-    position: absolute;
-    bottom: 40%; /* Adjust based on your lamp's position */
-    left: 50%;
-    width: 200px;
-    height: 200px;
-    transform: translateX(-50%);
-    clip-path: polygon(
-        25% 0%,     /* Top-left (inward from left) */
-        75% 0%,     /* Top-right (inward from right) */
-        100% 100%,  /* Bottom-right */
-        0% 100%     /* Bottom-left */
-        );
-    background: radial-gradient(
-      circle at center,
-      rgba(255, 230, 170, 0.8) 0%,
-      rgba(255, 255, 200, 0.3) 60%,
-      transparent 100%
-    );
-    filter: blur(15px);
-    z-index: 2;
-    animation: pulseDown 2s infinite alternate ease-in-out;
-    opacity: 0.9;
+  100% {
+    transform: translate(
+      calc(var(--drift-direction) * var(--drift-distance)), 
+      0
+    ) rotate(calc(var(--rotation-direction) * 1080deg));
+  }
+}
+
+/* Bug orbit animation */
+@keyframes orbit {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg) translateX(var(--radius)) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg) translateX(var(--radius)) rotate(-360deg);
+  }
+}
+
+/* Canvas for infinity animation */
+.infinity-canvas {
+  display: block;
+  background: transparent;
+}
+
+.infinity-animation {
+  position: absolute;
+  top: 75%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  width: 400px;
+  height: 200px;
+}
+
+.scroll-indicator {
+  position: absolute;
+  top: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 300;
+  text-align: center;
+  z-index: 4;
+
+  .scroll-text {
+    margin-bottom: 0.5rem;
   }
 
-  @keyframes pulseDown {
-    0% {
-      opacity: 0.7;
-      filter: blur(12px);
-    }
-    100% {
-      opacity: 0.9;
-      filter: blur(18px);
-    }
+  .scroll-icon .scroll-i {
+    display: inline-block;
+    animation: drift-fade 1.5s ease-out infinite;
   }
+}
 
-  .glow-base {
-    position: absolute;
-    top: 30%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80%;
-    height: 70%;
-    background: rgba(255, 230, 170, 0.2);
-    background: linear-gradient(
-      to bottom,
-      rgba(255, 230, 170, 0.1) 0%,
-      rgba(255, 230, 170, 0.25) 70%,
-      rgba(255, 230, 170, 0.15) 100%
-    );
-    box-shadow: 0 0 80px 60px rgba(255, 230, 170, 0.3);
-    clip-path: polygon(
-      20% 0%,        /* Top-left (inward) */
-      80% 0%,        /* Top-right (inward) */
-      100% 100%,     /* Bottom-right */
-      0% 100%        /* Bottom-left */
-    );
-    z-index: 1;
-    pointer-events: none;
-    filter: blur(1px);
+@keyframes drift-fade {
+  0%   { transform: translateY(0);   opacity: 1; }
+  60%  { transform: translateY(10px); opacity: 0; }
+  100% { transform: translateY(10px); opacity: 0; }
+}
+.arrow-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.arrow-down {
+  color: white;
+  width: 40px;
+  height: 40px;
+}
+
+.arrow-point1 {
+  animation: animate 1.2s ease-out 0.5s infinite alternate;
+}
+
+.arrow-point2 {
+  animation: animate 1.2s ease-in infinite alternate;
+}
+
+@keyframes animate {
+  0% {
+    color: rgba(0, 0, 0, 0);
   }
+  50% {
+    color: rgba(0, 0, 0, .5);
+  }
+  100% {
+    margin-top: 0;
+    color: rgba(255, 255, 255, 1.0);
+  }
+}
