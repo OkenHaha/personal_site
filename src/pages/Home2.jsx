@@ -1,6 +1,4 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import './Home2.scss';
 
 const InfinityAnimation = () => {
@@ -25,7 +23,7 @@ const InfinityAnimation = () => {
     const a = 60;     // overall size
     const stretch = 1.8; // widen factor
     let t = 0;
-    const speed = 0.02;
+    const speed = 0.01;
     
     function draw() {
       ctx.clearRect(0, 0, 400, 200);
@@ -70,9 +68,27 @@ const InfinityAnimation = () => {
   );
 };
 
+
+
 const Home2 = () => {
+  React.useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const section1 = document.querySelector('.section1');
+      
+      if (section1) {
+        // blur grows as you scroll down (max ~10px)
+        const blurAmount = Math.min(scrollY / 50, 10); 
+        section1.style.filter = `blur(${blurAmount}px)`;
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
   // Create bugs dynamically
-  const bugs = Array.from({ length: 13 }, (_, i) => {
+  const bugs = Array.from({ length: 17 }, (_, i) => {
     const size = 2 + Math.random() * 3;
     const initialX = 45 + Math.random() * 10; 
     const initialY = 45 + Math.random() * 20;
@@ -98,7 +114,8 @@ const Home2 = () => {
   });
 
   return (
-    <div className="home2-container">
+    <>
+    <section className="section1">
       <div className="lamp-background">
         <div className="glow-base"></div>
         
@@ -107,6 +124,10 @@ const Home2 = () => {
         <div className="infinity-animation">
           <InfinityAnimation />
         </div>
+        
+        <section className="h-screen flex flex-col items-center justify-center bg-black">
+          <h1 className="text-6xl mt-24 font-bold text-white mb-4">Welcome</h1>
+        </section>
         
         {/* Scroll Text */}
         <div className="scroll-indicator">
@@ -130,8 +151,26 @@ const Home2 = () => {
             </div>
           </div>
         </div>
+        
       </div>
-    </div>
+      <div className="text-overlay">
+        <h1 className="text-9xl font-bold text-white mb-4">W E L C O M E</h1>
+        {/* <p className="text-xl text-gray-300">Discover the infinite possibilities.</p> */}
+      </div>
+    </section>
+
+
+      <section className="section-2">
+        <h2>Section 2</h2>
+        <p>This slides up and covers the hero.</p>
+      </section>
+
+      <section className="section-3">
+        <h2>Section 3</h2>
+        <p>More content…</p>
+      </section>
+
+    </>
   );
 };
 
