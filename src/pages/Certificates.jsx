@@ -10,7 +10,7 @@ const Certificates = () => {
     const [selectedImage, setSelectedImage] = useState('');
 
     // Base URL for assets
-    const asset_url = 'https://okenhaha.github.io/portfolio';
+    const asset_url = 'https://res.cloudinary.com/dilloogsv/image/fetch/f_auto,q_auto/https://okenhaha.github.io/portfolio';
 
     // Function to handle modal open
     const openModal = (imgSrc) => {
@@ -64,6 +64,12 @@ const Certificates = () => {
                         onClick={() => filterCertificates('all')}
                     >
                         All
+                    </button>
+                    <button 
+                        className={`filter-btn ${activeFilter === 'oracle' ? 'active' : ''}`}
+                        onClick={() => filterCertificates('oracle')}
+                    >
+                        Oracle
                     </button>
                     <button 
                         className={`filter-btn ${activeFilter === 'udemy' ? 'active' : ''}`}

@@ -3,10 +3,22 @@
 export const certificateData = [
     // Udemy Certificates
     {
+        category: 'oracle',
+        badge: { type: 'ai', text: 'Generative AI Professional' },
+        image: '/certificates/oci/oci-gen-ai-professional.jpg',
+        alt: 'OCI Generative AI Profesional'
+    },
+    {
+        category: 'oracle',
+        badge: { type: 'ai', text: 'AI Foundation Associate' },
+        image: '/certificates/oci/oci-ai-foundation-accociate.jpg',
+        alt: 'OCI AI Foundataion Associate'
+    },
+    {
         category: 'udemy',
         badge: { type: 'ai', text: 'Generative AI' },
         image: '/certificates/udemy/building-gen-ai-apps.jpg',
-        alt: 'React JS Complete Guide'
+        alt: 'Building Gen AI Apps'
     },
     {
         category: 'udemy',
