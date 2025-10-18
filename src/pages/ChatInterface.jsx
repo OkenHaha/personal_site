@@ -4,7 +4,7 @@ import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { okaidia } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { atomOneDark as okaidia } from 'react-syntax-highlighter/dist/styles/atom-one-dark';
 import 'katex/dist/katex.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -147,7 +147,7 @@ const ChatInterface = () => {
         textContent = String(children);
       }
       
-      if (textContent.match(/^<think>[\s\S]*<\/think>$/)) {
+      if (textContent.match(/^<tool_call>[\s\S]*<\/think>$/)) {
         return null;
       }
       return <p>{children}</p>;
@@ -173,7 +173,7 @@ const ChatInterface = () => {
   const cleanResponseContent = (content) => {
     if (!content) return '';
     
-    let cleaned = content.replace(/<think>[\s\S]*?<\/think>/g, '');
+    let cleaned = content.replace(/<tool_call>[\s\S]*?<\/think>/g, '');
     cleaned = cleaned.replace(/\\boxed\{([^}]+)\}/g, '$1'); // For math
     cleaned = cleaned.replace(/^\s*\\\w+\{([^}]+)\}\s*$/gm, '$1'); // Remove simple LaTeX commands if they are the only content
     cleaned = cleaned.replace(/\$\$\s*\$\$/g, ''); // Remove empty math blocks
