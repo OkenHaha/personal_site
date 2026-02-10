@@ -24,7 +24,7 @@ const Certificates = () => {
         setModalOpen(false);
         document.body.style.overflow = '';
     };
-     const getFilteredCertificates = () => {
+    const getFilteredCertificates = () => {
         if (activeFilter === 'all') {
             return certificateData;
         }
@@ -59,55 +59,55 @@ const Certificates = () => {
                 </div>
 
                 <div className="filter-container">
-                    <button 
+                    <button
                         className={`filter-btn ${activeFilter === 'all' ? 'active' : ''}`}
                         onClick={() => filterCertificates('all')}
                     >
                         All
                     </button>
-                    <button 
+                    <button
                         className={`filter-btn ${activeFilter === 'oracle' ? 'active' : ''}`}
                         onClick={() => filterCertificates('oracle')}
                     >
                         Oracle
                     </button>
-                    <button 
+                    <button
                         className={`filter-btn ${activeFilter === 'udemy' ? 'active' : ''}`}
                         onClick={() => filterCertificates('udemy')}
                     >
                         Udemy
                     </button>
-                    <button 
+                    <button
                         className={`filter-btn ${activeFilter === 'coursera' ? 'active' : ''}`}
                         onClick={() => filterCertificates('coursera')}
                     >
                         Coursera
                     </button>
-                    <button 
+                    <button
                         className={`filter-btn ${activeFilter === 'amity' ? 'active' : ''}`}
                         onClick={() => filterCertificates('amity')}
                     >
                         Amity
                     </button>
-                    <button 
+                    <button
                         className={`filter-btn ${activeFilter === 'icsi' ? 'active' : ''}`}
                         onClick={() => filterCertificates('icsi')}
                     >
                         ICSI
                     </button>
-                    <button 
+                    <button
                         className={`filter-btn ${activeFilter === 'nielit' ? 'active' : ''}`}
                         onClick={() => filterCertificates('nielit')}
                     >
                         Nielit
                     </button>
-                    <button 
+                    <button
                         className={`filter-btn ${activeFilter === 'sololearn' ? 'active' : ''}`}
                         onClick={() => filterCertificates('sololearn')}
                     >
                         Solo Learn
                     </button>
-                    <button 
+                    <button
                         className={`filter-btn ${activeFilter === 'others' ? 'active' : ''}`}
                         onClick={() => filterCertificates('others')}
                     >
@@ -116,38 +116,36 @@ const Certificates = () => {
                 </div>
 
                 <div className="certificates-grid">
-                {getFilteredCertificates().map((certificate, index) => (
-                    <div 
-                        key={index}
-                        className={`certificate-card ${certificate.category}`}
-                    >
-                        <span className={`certificate-badge badge-${certificate.badge.type}`}>
-                            {certificate.badge.text}
-                        </span>
-                        <div 
-                            className="certificate-img" 
-                            onClick={() => openModal(`${asset_url}${certificate.image}`)}
+                    {getFilteredCertificates().map((certificate, index) => (
+                        <div
+                            key={index}
+                            className={`certificate-card ${certificate.category}`}
                         >
-                            <img 
-                                src={`${asset_url}${certificate.image}`}
-                                alt={certificate.alt}
-                                loading="lazy"
-                                onError={(e) => {
-                                    e.target.src = `${asset_url}/assets/images/placeholder.jpg`;
-                                }}
-                            />
-                            <div className="hover-overlay">
-                                <FontAwesomeIcon icon={faMagnifyingGlassPlus} style={{fontSize:"50px", color:"#e9ecef   "}}/>
+                            <span className={`certificate-badge badge-${certificate.badge.type}`}>
+                                {certificate.badge.text}
+                            </span>
+                            <div
+                                className="certificate-img"
+                                onClick={() => openModal(`${asset_url}${certificate.image}`)}
+                            >
+                                <img
+                                    src={`${asset_url}${certificate.image}`}
+                                    alt={certificate.alt}
+                                    loading="lazy"
+
+                                />
+                                <div className="hover-overlay">
+                                    <FontAwesomeIcon icon={faMagnifyingGlassPlus} style={{ fontSize: "50px", color: "#e9ecef   " }} />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
             </div>
 
             {/* Modal */}
             {modalOpen && (
-                <div 
+                <div
                     className={`modal ${modalOpen ? 'show' : ''}`}
                     onClick={(e) => e.target === e.currentTarget && closeModal()}
                 >

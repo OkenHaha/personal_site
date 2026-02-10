@@ -22,6 +22,12 @@ export const certificateData = [
     },
     {
         category: 'udemy',
+        badge: { type: 'python', text: 'Ethical Hacking' },
+        image: '/certificates/udemy/Build-Undetectable-Malware-Using-C-Language-Ethical-Hacking.jpg',
+        alt: 'Build Undetectable Malware Using C Language'
+    },
+    {
+        category: 'udemy',
         badge: { type: 'frontend', text: 'Frontend' },
         image: '/certificates/udemy/React-JS--Complete-Guide-for-Frontend-Web-Development-[2021].jpg',
         alt: 'React JS Complete Guide'
